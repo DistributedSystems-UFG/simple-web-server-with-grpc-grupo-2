@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+service SensorService {
+    rpc AddTemperatureData (TemperatureData) returns (StatusReply) {}
+    rpc GetTemperatureByDate (DateRange) returns (ListTemperatureData) {}
+    rpc GetTemperatureByLocalization (LocalizationRange) returns (ListTemperatureData) {}
+}
+
+message StatusReply {
+    string status = 1;
+  }
+
+message Date {
+    uint32 year = 1;
+    uint32 month = 2;
+    uint32 day = 3;
+    uint32 hour = 4;
+    uint32 minute = 5;
+    uint32 second = 6;
+}
+
+message Localization {
+    int32 x = 1;
+    int32 y = 2;
+}
+
+message TemperatureData {
+    Date date = 1;
+    Localization localization = 2;
+    float temperature = 3;
+}
+
+message ListTemperatureData {
+    repeated TemperatureData data = 1;
+}
+
+message LocalizationRange {
+    Localization l1 = 1;
+    Localization l2 = 2;
+}
+
+message DateRange {
+    Date d1 = 1;
+    Date d2 = 2;
+}
