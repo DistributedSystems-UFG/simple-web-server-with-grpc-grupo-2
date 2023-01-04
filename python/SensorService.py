@@ -55,7 +55,32 @@ class SensorService(SensorService_pb2_grpc.SensorServiceServicer):
                 list.data.append(SensorService_pb2.TemperatureData(
                     date=SensorService_pb2.Date(year=int(Y), month=int(m), day=int(d),
                                                 hour=int(H), minute=int(M), second=int(S)),
-                    localization=SensorService_pb2.Localization(x=int(x), y=int(y)),
+                    localization=SensorService_pb2.Localization(
+                        x=int(x), y=int(y)),
+                    temperature=t
+                ))
+
+        return list
+
+    def GetTemperatureByLocalization(self, request, context):
+        l1 = request.l1
+        l2 = request.l2
+        leftTopCorner = (min(l1.x, l2.x), min(l1.y, l2.y))
+        rightBottomCorner = (max(l1.x, l2.x), max(l1.y, l2.y))
+
+        list = SensorService_pb2.ListTemperatureData()
+        for temperatureData in temperatureDataDB:
+            x, y = temperatureData['localization'].split(':')
+            x = int(x)
+            y = int(y)
+            if x >= leftTopCorner[0] and x <= rightBottomCorner[0] and y >= leftTopCorner[1] and y <= rightBottomCorner[1]:
+                Y, m, d, H, M, S = temperatureData['date'].split(':')
+                t = temperatureData['temperature']
+
+                list.data.append(SensorService_pb2.TemperatureData(
+                    date=SensorService_pb2.Date(year=int(Y), month=int(m), day=int(d),
+                                                hour=int(H), minute=int(M), second=int(S)),
+                    localization=SensorService_pb2.Localization(x=x, y=y),
                     temperature=t
                 ))
 

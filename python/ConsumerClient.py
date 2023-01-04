@@ -26,7 +26,8 @@ def run():
             error_msg()
             exit(1)
     elif argv[1].lower() == 'localization':
-        pass
+        x1, y1 = argv[2].split(':')
+        x2, y2 = argv[3].split(':')
     else:
         error_msg()
         exit(1)
@@ -40,6 +41,12 @@ def run():
                                           hour=int(H1), minute=int(M1), second=int(S1)),
                 d2=SensorService_pb2.Date(year=int(Y2), month=int(m2), day=int(d2),
                                           hour=int(H2), minute=int(M2), second=int(S2))
+            ))
+            print(response.data)
+        elif argv[1].lower() == 'localization':
+            response = stub.GetTemperatureByLocalization(SensorService_pb2.LocalizationRange(
+                l1=SensorService_pb2.Localization(x=int(x1), y=int(y1)),
+                l2=SensorService_pb2.Localization(x=int(x2), y=int(y2))
             ))
             print(response.data)
 
